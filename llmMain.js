@@ -1,4 +1,5 @@
 const { OpenAI } = require('openai');
+const _ = require('lodash');
 const fs = require('fs');
 const getLLmResponse = require('./index').main;
 const getMatchedData = require('./getKnnData').main;
@@ -13,7 +14,7 @@ async function getEmbeddings(text) {
         model: "text-embedding-ada-002",
         input: text,
     });
-    return embedding;
+    return _.get(embedding, 'data[0].embedding');
 }
 
 async function processUserQuery(userQuery) {
@@ -27,9 +28,10 @@ async function processUserQuery(userQuery) {
    try {
        const keywords = await getLLmResponse('keywords', userQuery);
        const embedRes = await getEmbeddings(keywords);
-       // const feed = step3 & 4 combained response
-       const feed = await getMatchedData(queryVector);
+       const feed = await getMatchedData(embedRes);
+       console.log(feed);
        const llm_answer = await getLLmResponse('getAnswer', userQuery, feed);
+       console.log(llm_answer);
        return llm_answer;
    } catch(err) {
         console.error('Something went wrong!!!', err);
@@ -40,3 +42,5 @@ async function processUserQuery(userQuery) {
 module.exports = {
     processUserQuery,
 }
+
+processUserQuery('How is PM of india');

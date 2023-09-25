@@ -24,7 +24,7 @@ const getAnswer = [{
   content: ''
 }];
 
-export async function main(queryType, query, feed) {
+async function main(queryType, query, feed) {
   const message = queryType === 'keywords' ? getKeywords : getAnswer;
   if (queryType === 'getAnswer' && feed) message[0].content = message[0].content + feed + '\"\n\n';
   message[1].content = query;
@@ -37,6 +37,10 @@ export async function main(queryType, query, feed) {
   });
   console.log(completion.choices[0].message);
   return completion.choices[0].message.content;
+}
+
+module.exports = {
+  main,
 }
 
 // main('khed', 'what is photosythasis');

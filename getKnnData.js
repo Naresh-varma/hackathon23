@@ -25,7 +25,7 @@ const main = (queryVector) => new Promise((resolve, reject) => {
         fields: ["title", "content"]
     }).then((res) => {
         console.log(`Found ${_.get(res, 'hits.hits.length')} matched record(s)`);
-        const data = '';
+        let data = '';
         if (!_.isEmpty(_.get(res, 'hits.hits'))) {
            _.each(res.hits.hits, (hit) => {
             data += `${_.get(hit, '_source.content')}`
