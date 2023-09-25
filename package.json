@@ -1,0 +1,21 @@
+{
+  "name": "gptproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.9.0",
+    "bluebird": "^3.7.2",
+    "dotenv": "^16.3.1",
+    "elastic": "^0.1.10",
+    "openai": "^4.10.0",
+    "readline-sync": "^1.4.10",
+    "request": "^2.88.2"
+  }
+}

@@ -1,0 +1,3 @@
+API key
+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
+https://platform.openai.com/docs/api-reference/embeddings?lang=node.js
