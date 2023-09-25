@@ -16,7 +16,7 @@ async function getEmbeddings(text) {
     return embedding;
 }
 
-const main = async () => new Promise((resolve, reject) => {
+async function main() {
     /*
         1) get keywords
         2) get embeedings for keywords
@@ -26,13 +26,10 @@ const main = async () => new Promise((resolve, reject) => {
     */
     const query = 'Photosynthesis';
     const keywords = await open_ai.main('keywords', query);
-    getEmbeddings(keywords)
-        .then((embedRes) => {
-            fs.writeFileSync(query.split(' ').join('_'), JSON.stringify(embedRes?.data[0]?.embedding));
-            return resolve();
-        });
-
-})
+    const embedRes = await getEmbeddings(keywords);
+    fs.writeFileSync(query.split(' ').join('_'), JSON.stringify(embedRes?.data[0]?.embedding));
+    return resolve();
+}
 
 main();
 
