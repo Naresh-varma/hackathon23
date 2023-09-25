@@ -16,7 +16,7 @@ async function getEmbeddings(text) {
     return embedding;
 }
 
-async function main() {
+async function main(userQuery) {
     /*
         1) get keywords
         2) get embeedings for keywords
@@ -24,9 +24,10 @@ async function main() {
         4) pick top two responses text
         5) ask openAI for the answer
     */
-    const query = 'Photosynthesis';
-    const keywords = await open_ai.main('keywords', query);
+    const keywords = await open_ai.main('keywords', userQuery);
     const embedRes = await getEmbeddings(keywords);
+    // const feed = step3 & 4 combained response
+    const llm_answer = await open_ai.main('getAnswer', userQuery, feed);
     fs.writeFileSync(query.split(' ').join('_'), JSON.stringify(embedRes?.data[0]?.embedding));
     return resolve();
 }

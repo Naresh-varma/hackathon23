@@ -17,15 +17,16 @@ const getKeywords = [
 
 const getAnswer = [{
   role: "system",
-  content: "You are my helpful agent, I will give you the content and you have to understand the content and answer my question from the content, Keep the response very short and strightforward\n\ncontent: \"Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy into chemical energy in the form of glucose. This vital process occurs in chloroplasts, specialized organelles containing the pigment chlorophyll. Through photosynthesis, plants play a crucial role in the Earth's ecosystem by producing oxygen and providing a source of food for various organisms. \"\n\n"
+  content: "You are my helpful agent, I will give you the content and you have to understand the content and answer my question from the content, Keep the response very short and strightforward\n\ncontent: \" ${} "
 },
 {
   role: "user",
   content: ''
 }];
 
-export async function main(queryType, query) {
+export async function main(queryType, query, feed) {
   const message = queryType === 'keywords' ? getKeywords : getAnswer;
+  if (queryType === 'getAnswer' && feed) message[0].content = message[0].content + feed + '\"\n\n';
   message[1].content = query;
   const completion = await openai.chat.completions.create({
     messages: message,
