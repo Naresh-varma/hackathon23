@@ -109,6 +109,7 @@ async function getApplicantRecommendationsForGivenVacancy(vacancy) {
 
 module.exports = {
     processUserQuery,
+    getEmbeddings
 }
 
 // processUserQuery('what is energy');
