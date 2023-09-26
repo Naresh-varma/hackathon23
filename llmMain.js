@@ -27,6 +27,24 @@ function getVecterText(vacancies) {
     return text;
 }
 
+const indexMapper = (index) => {
+    const typeMapper = {
+        'knowledgearticle': {
+            fields: ['title', 'abstract', 'body'],
+            vectorField: 'knowledge-vector'
+        },
+        'vacancy': {
+            fields: ['jobtitle', 'location', 'employmentType', 'yearsOfExpirence', 'jobDescription', 'requiredSkills'],
+            vectorField: 'vacancy-vector'
+        },
+        'faqs': {
+            fields: ['question', 'answer'],
+            vectorField: 'faqs-vector'
+        }
+    }
+    return typeMapper[index];
+}
+
 async function processUserQuery(userQuery, index) {
     /*
         1) get keywords
@@ -41,25 +59,8 @@ async function processUserQuery(userQuery, index) {
         let fields = [];
         let vectorField;
         console.log('Index', index);
-        switch(index) {
-            case 'knowledge_base': 
-            fields = ['title', 'description'];
-            vectorField = 'title-vector';
-            sourceField = 'description';
-            break;
-            case 'vacancy': 
-            fields = ['title', 'requiredSkills', 'jobDescription'];
-            vectorField = 'vacancy-vector';
-            sourceField = '';
-            break;
-            case 'faqs': 
-            fields = ['question', 'answer'];
-            vectorField = 'faqs-vector';
-            sourceField = 'answer';
-            break;
-            default: break;
-        }
-       const feed = await getMatchedData(embedRes, fields, vectorField, index, false, sourceField);
+       const indexDetails = indexMapper(index);
+       const feed = await getMatchedData(embedRes, indexDetails.fields, indexDetails.vectorField, index, false);
        console.log('Feed', feed);
        const llm_answer = await getLLmResponse('getAnswer', userQuery, feed);
        console.log(llm_answer);
