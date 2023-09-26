@@ -19,7 +19,7 @@ const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new 
         knn: {
             "field": vectorField ? vectorField : "title-vector",
             "query_vector": queryVector,
-            "k": 4, // how many records you want ?
+            "k": 5, // how many records you want ?
             "num_candidates": 10000, // how many records we need to search max for proper results ?
         },
         fields: fields ? fields : ["title", "content"]

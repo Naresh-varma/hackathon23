@@ -17,6 +17,16 @@ async function getEmbeddings(text) {
     return _.get(embedding, 'data[0].embedding');
 }
 
+function getVecterText(vacancies) {
+    if (!_.isArray(vacancies)) vacancies = [vacancies];
+    let text = '';
+    _.forEach(vacancies, (vacancy) => {
+        text += vacancy.title + vacancy.location + vacancy.requiredSkills.join(', ')
+    });
+    console.log(text);
+    return text;
+}
+
 async function processUserQuery(userQuery) {
     /*
         1) get keywords
@@ -42,19 +52,37 @@ async function processUserQuery(userQuery) {
 async function getRecommendationforPerson(person) {
     if (!person) {
         person = {
-            collection: 'person',
-            name: 'Nivya',
-            email: 'nivya@gmail.com',
-            location: 'Bangalore',
-            education: 'B-tech',
-            workExperience: '4 years',
-            skills: ['VueJs', 'meterialUI', 'redux', 'mongo'],
-            certifications: ['product engineer']
+            "collection": "person",
+            "name": "Michael Clark",
+            "email": "michael.clark@example.com",
+            "location": "London",
+            "education": "MBA",
+            "workExperience": "6 years",
+            "skills": ["Financial Analysis", "Budgeting", "Leadership"],
+            "certifications": ["CFA"]
         };
     }
     const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
     const embeedings = await getEmbeddings(vectorText);
     const recommendations = await getMatchedData(embeedings, ['title', 'requiredSkills', 'jobDescription'], 'vacancy-vector', 'vacancy', true);
+    console.log(recommendations);
+}
+
+async function getApplicantRecommendationsForGivenVacancy(vacancy) {
+    if (!vacancy) {
+        vacancy = {
+            "collection": "vacancy",
+            "title": "Content Writer",
+            "location": "San Francisco",
+            "employmentType": "full-time",
+            "jobDescription": "We're seeking a talented Content Writer to join our team. You'll be responsible for creating engaging and relevant content across various platforms. Strong writing and editing skills, creativity, and ability to adapt to different tones and styles are essential. [San Francisco, Full-time]",
+            "requiredSkills": ["Content Writing", "Editing", "Creativity"]
+        };
+    }
+    const vectorText = getVecterText(vacancy);
+    const keywords = await getLLmResponse('keywords', vectorText);
+    const embeedings = await getEmbeddings(keywords);
+    const recommendations = await getMatchedData(embeedings, ['name', 'email', 'skillsinternal'], 'person-vector', 'person', true);
     console.log(recommendations);
 }
 
@@ -64,4 +92,4 @@ module.exports = {
 
 // processUserQuery('what is energy');
 
-getRecommendationforPerson();
+getApplicantRecommendationsForGivenVacancy();
