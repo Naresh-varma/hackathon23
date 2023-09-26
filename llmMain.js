@@ -83,7 +83,8 @@ async function getRecommendationforPerson(person) {
             "certifications": ["CFA"]
         };
     }
-    const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
+    // const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
+    const vectorText = person.skills.join(', ');
     const embeedings = await getEmbeddings(vectorText);
     const recommendations = await getMatchedData(embeedings, ['title', 'requiredSkills', 'jobDescription'], 'vacancy-vector', 'vacancy', true);
     console.log(recommendations);
@@ -105,6 +106,32 @@ async function getApplicantRecommendationsForGivenVacancy(vacancy) {
     const embeedings = await getEmbeddings(keywords);
     const recommendations = await getMatchedData(embeedings, ['name', 'email', 'skillsinternal'], 'person-vector', 'person', true);
     console.log(recommendations);
+}
+
+async function composeMailForShortListedPerson(vacancy, userName) {
+    const param = {
+        model: "gpt-3.5-turbo",
+        messages: [
+            {
+                "role": "system",
+                "content": "You are a helpful AI assistant, I want to draft a mail for a job applicant, conveying hey user we have found this opening to you a best match, here I am giving you the vacancy that he is shortlisted for, use this info for drafting the mail don't include this object directly"
+            },
+            {
+                "role": "user",
+                "content": "draft the mail for ANil"
+            }
+        ],
+        temperature: 1,
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+    };
+    if (vacancy) param.messages[0].content = param.messages[0].content + JSON.stringify(vacancy);
+    if (userName) param.messages[1].content = `Draft the mail for ${userName}`;
+    const response = await openai.chat.completions.create(param);
+    console.log(response.choices[0].message);
+    return response.choices[0].message;
 }
 
 module.exports = {
