@@ -85,6 +85,7 @@ const seedData = (db) => new Promise((resolve, reject) => {
     BluebirdPromise.mapSeries(collections, (modelName) => new Promise((colRes, colRej) => {
         if (!mapper[modelName]) return colRes();
         const collection = db.collection(modelName);
+        console.log('collection : ', collection);
         collection.find({}).toArray((err, data) => {
             if (err) {
                 console.error('Error while generating data :', err);
@@ -96,6 +97,7 @@ const seedData = (db) => new Promise((resolve, reject) => {
             }
             processData(data, modelName)
                 .then(() => makeBulkRequestToEls(data, mapper[modelName].index) )
+                .then(() => colRes())
                 .catch(err => colRej(err))
         });
     }))
@@ -112,6 +114,7 @@ MongoClient.connect(MongoUri, (err, client) => {
     seedData(db)
         .then(() => {
             console.log('seed completed');
+            client.close();
         })
         .catch(console.error);
         
