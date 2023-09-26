@@ -24,12 +24,12 @@ const mapper = {
     },
     '642132dd3d73be2200773da5-Faq': {
         index: 'faqs', 
-        fields: ['question', 'answer'],
+        fields: ['answer'],
         vectorField: 'faqs-vector'
     },
     '642132dd3d73be2200773da5-Vacancy': {
         index: 'vacancies',
-        fields: ['jobtitle', 'years of experience', 'job description', 'skilltxt'],
+        fields: ['jobtitle', 'yearsOfExpirence', 'jobDescription', 'requiredSkills'],
         vectorField: 'vacancy-vector'
     }
 
