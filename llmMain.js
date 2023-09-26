@@ -39,8 +39,29 @@ async function processUserQuery(userQuery) {
    }
 }
 
+async function getRecommendationforPerson(person) {
+    if (!person) {
+        person = {
+            collection: 'person',
+            name: 'Nivya',
+            email: 'nivya@gmail.com',
+            location: 'Bangalore',
+            education: 'B-tech',
+            workExperience: '4 years',
+            skills: ['VueJs', 'meterialUI', 'redux', 'mongo'],
+            certifications: ['product engineer']
+        };
+    }
+    const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
+    const embeedings = await getEmbeddings(vectorText);
+    const recommendations = await getMatchedData(embeedings, ['title', 'requiredSkills', 'jobDescription'], 'vacancy-vector', 'vacancy', true);
+    console.log(recommendations);
+}
+
 module.exports = {
     processUserQuery,
 }
 
 // processUserQuery('what is energy');
+
+getRecommendationforPerson();

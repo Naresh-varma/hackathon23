@@ -12,7 +12,56 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_SECRET_PAID
 });
 
+const persons = [
+    {
+        collection: 'person',
+        name: 'Naresh',
+        email: 'naresh@gmail.com',
+        location: 'Hyderabad',
+        education: 'B-tech',
+        workExperience: '2 years',
+        skillsinternal: ['NodeJs', 'express','elastic', 'mongo'],
+        skills: [73,3,3],
+        certifications: ['aws certified architect']
+    },
+    {
+        collection: 'person',
+        name: 'Nivya',
+        email: 'nivya@gmail.com',
+        location: 'Bangalore',
+        education: 'B-tech',
+        workExperience: '4 years',
+        skills: ['VueJs', 'meterialUI', 'redux', 'mongo'],
+        certifications: ['product engineer']
+    }
+]
+
+const jobVacancies = [
+    {   
+        collection: 'vacancy',
+        title: 'Backend Engineer',
+        location: 'Hyderabad',
+        employementType: 'full-time',
+        jobDescription: 'We are looking for a talented and experienced Backend Engineer to join our team and help us build and maintain our scalable and reliable backend systems. You will be using ExpressJS and Elasticsearch to develop and maintain RESTful APIs that power our web and mobile applications. Experience with Node.js, RESTful APIs, and cloud computing is a plus. [Hyderabad, Full-time]',
+        requiredSkills: ['expressJs', 'elastic'],
+    },
+    {
+        collection: 'vacancy',
+        title: 'Frontend Engineer',
+        location: 'Hyderabad',
+        employementType: 'full-time',
+        jobDescription: 'We are looking for a talented and experienced Front-End Engineer to join our team and help us build and maintain our user-facing web and mobile applications. You will be responsible for developing and maintaining the user interface (UI) and user experience (UX) of our applications using HTML, CSS, and JavaScript. You will also work closely with our back-end engineers to integrate the UI and UX with the back-end systems.',
+        requiredSkills: ['VueJs', 'meterialUI'],
+    }
+];
+
 const arr = [
+    {
+        "title": "The Basics of Computer Programming",
+        "content": "We are having an opening to fill for a Senoir designer with proficient knowledge in user research and user experience designing. Should be comfortable to use tools like Figma, Adobe and Balsamiq to prototype and design wireframes. should be comfortable to work anywhere in UK."
+    },
+]
+const arr1 = [
     {
     "title": "The Basics of Computer Programming",
     "content": "Computer programming involves writing instructions (code) that a computer can interpret and execute. It requires knowledge of programming languages like Python, Java, C++, and more. Programmers use logic, algorithms, and data structures to solve problems and create software applications, games, and websites that power our digital world."
@@ -44,11 +93,11 @@ async function getEmbeddings(text) {
 }
 
 const makeBulkRequestToEls = (data) => new Promise((resolve, reject) => {
-    const indexName = 'test_embeedings';
+    const indexName = data[0].collection ? data[0].collection : 'test_embeedings';
     client.bulk({
-        body: data.flatMap(doc => [{ index: { _index: 'test_embeedings' } }, doc])
+        body: data.flatMap(doc => [{ index: { _index: indexName } }, doc])
     }).then((body) => {
-        console.log('Response :', body);
+        console.log('Response :', body.items[0].index);
         return resolve();
     }).catch((err) => {
         console.error('getting error while posting data to elastic search :', err);
@@ -65,20 +114,29 @@ const makeBulkRequestToEls = (data) => new Promise((resolve, reject) => {
 });
 
 const main = () => new Promise((resolve, reject) => {
-    BluebirdPromise.mapSeries(arr, (data) => new Promise((resolve, reject) => {
-        getEmbeddings(data.content)
+    BluebirdPromise.mapSeries(jobVacancies, (data) => new Promise((resolve, reject) => {
+        let vectorText = data.content;
+        if (data.collection === 'vacancy') {
+            vectorText = data.title + data.location + data.requiredSkills;
+        }
+        if (data.collection === 'person') {
+            vectorText = data.name + data.certifications.join(', ') + data.location + data.education + data.workExperience + data.skills.join(', ');
+        }
+        getEmbeddings(vectorText)
             .then((embedRes) => {
                 console.log(`Recevied embeedings for ${data.title}`);
                 console.log(`embeedings length ${embedRes?.data[0]?.embedding.length}`);
                 if (embedRes) {
-                    data['title-vector'] = embedRes?.data[0]?.embedding;
+                    if (data.collection) {
+                        data[`${data.collection}-vector`] = embedRes?.data[0]?.embedding;
+                    } else data['title-vector'] = embedRes?.data[0]?.embedding;
                 }
                 return resolve();
             });
     }))
       .then(() => {
         console.log('completed');
-        return resolve(makeBulkRequestToEls(arr));
+          return resolve(makeBulkRequestToEls(jobVacancies));
       })
       .catch(err => console.error(err));
 })
