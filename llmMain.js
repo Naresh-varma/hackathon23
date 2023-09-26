@@ -54,14 +54,13 @@ async function getRecommendationforPerson(person) {
     }
     const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
     const embeedings = await getEmbeddings(vectorText);
-    const recommendations = await getMatchedData(embeedings, ['title', 'requiredSkills', 'jobDescription'], 'vacancy-vector', 'vacancy', true);
-    console.log(recommendations);
+    let recommendations = await getMatchedData(embeedings, [], 'vacancy-vector', 'vacancy', true);
+    const vacationFields = ['title', 'requiredSkills', 'jobDescription', 'location', 'employementType'];
+    recommendations = recommendations.map(r => _.pick(r._source, vacationFields));
+    return recommendations;
 }
 
 module.exports = {
     processUserQuery,
+    getRecommendationforPerson,
 }
-
-// processUserQuery('what is energy');
-
-getRecommendationforPerson();
