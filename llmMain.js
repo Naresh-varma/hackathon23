@@ -107,7 +107,7 @@ async function getApplicantRecommendationsForGivenVacancy(vacancy) {
     const keywords = await getLLmResponse('keywords', vectorText);
     const embeedings = await getEmbeddings(keywords);
     const personFields = ['firstName', 'lastName', 'workemail', 'skillText'];
-    let recommendations = await getMatchedData(embeedings, personFields, 'personess-vector', 'personess', true);
+    let recommendations = await getMatchedData(embeedings, personFields, 'personess-vector', 'personess', true, 3);
     if (recommendations && recommendations.length) {
         _.each(recommendations, (item) => {
             delete item._source['personess-vector'];

@@ -9,7 +9,7 @@ const client = new Client({
 })
 require("dotenv").config();
 
-const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new Promise((resolve, reject) => {
+const main = (queryVector, fields, vectorField, indexName, isReturnHits, kValue) => new Promise((resolve, reject) => {
     if (!queryVector) return reject(new Error('Please provide query vector to search'));
     console.log('index details', indexName, vectorField, fields);
     // querying elastic search to get top matched records
@@ -18,7 +18,7 @@ const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new 
         knn: {
             "field": vectorField ? vectorField : "title-vector",
             "query_vector": queryVector,
-            "k": 5, // how many records you want ?
+            "k": kValue || 5, // how many records you want ?
             "num_candidates": 10000, // how many records we need to search max for proper results ?
         },
         fields: fields ? fields : ["title", "content"]
