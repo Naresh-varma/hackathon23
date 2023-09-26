@@ -292,32 +292,43 @@ const jobVacancies1 = [
     }
 ];
 
-const arr = [
+const faqsData = [
     {
-        "title": "The Basics of Computer Programming",
-        "content": "We are having an opening to fill for a Senoir designer with proficient knowledge in user research and user experience designing. Should be comfortable to use tools like Figma, Adobe and Balsamiq to prototype and design wireframes. should be comfortable to work anywhere in UK."
+        "collection": "faqs",
+        "question": "What are the basics of programming?",
+        "answer": "Computer Programming is a set of instructions, that helps the developer to perform certain tasks that return the desired output for the valid inputs."
+    },
+    {
+        "collection": "faqs",
+        "question": "Who is the CEO of Applaud?",
+        "answer": "Applaud CEO is Ivan"
+    },
+    {
+        "collection": "faqs",
+        "question": "Who are the founders of Applaud",
+        "answer": "Here are the founders of the applaud, Duncan and Ivan"
     },
 ]
-const arr1 = [
+const knowledgeBaseData = [
     {
     "title": "The Basics of Computer Programming",
-    "content": "Computer programming involves writing instructions (code) that a computer can interpret and execute. It requires knowledge of programming languages like Python, Java, C++, and more. Programmers use logic, algorithms, and data structures to solve problems and create software applications, games, and websites that power our digital world."
+    "description": "Computer programming involves writing instructions (code) that a computer can interpret and execute. It requires knowledge of programming languages like Python, Java, C++, and more. Programmers use logic, algorithms, and data structures to solve problems and create software applications, games, and websites that power our digital world."
     },
     {
     "title": "The Human Digestive System",
-    "content": "The human digestive system is a complex series of organs responsible for breaking down food and absorbing nutrients. It includes the mouth, esophagus, stomach, small intestine, large intestine, and various associated glands. Digestion begins in the mouth with the action of enzymes and continues through a carefully orchestrated process that ensures essential nutrients reach the body's cells."
+    "description": "The human digestive system is a complex series of organs responsible for breaking down food and absorbing nutrients. It includes the mouth, esophagus, stomach, small intestine, large intestine, and various associated glands. Digestion begins in the mouth with the action of enzymes and continues through a carefully orchestrated process that ensures essential nutrients reach the body's cells."
     },
     {
     "title": "Renewable Energy Sources",
-    "content": "Renewable energy sources are natural resources that can be replenished over time. They include solar energy, wind power, hydropower, geothermal energy, and biomass. Unlike fossil fuels, which are finite, renewable energy sources offer sustainable and environmentally friendly alternatives for meeting our energy needs."
+    "description": "Renewable energy sources are natural resources that can be replenished over time. They include solar energy, wind power, hydropower, geothermal energy, and biomass. Unlike fossil fuels, which are finite, renewable energy sources offer sustainable and environmentally friendly alternatives for meeting our energy needs."
     },
     {
     "title": "The Water Cycle",
-    "content": "The water cycle, also known as the hydrologic cycle, is the continuous movement of water on, above, and below the surface of the Earth. It involves processes such as evaporation, condensation, precipitation, and runoff. This cycle regulates the distribution of water across the planet, sustaining life and maintaining ecological balance."
+    "description": "The water cycle, also known as the hydrologic cycle, is the continuous movement of water on, above, and below the surface of the Earth. It involves processes such as evaporation, condensation, precipitation, and runoff. This cycle regulates the distribution of water across the planet, sustaining life and maintaining ecological balance."
     },
     {
     "title": "Photosynthesis in Plants",
-    "content": "Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy into chemical energy in the form of glucose. This vital process occurs in chloroplasts, specialized organelles containing the pigment chlorophyll. Through photosynthesis, plants play a crucial role in the Earth's ecosystem by producing oxygen and providing a source of food for various organisms."
+    "description": "Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy into chemical energy in the form of glucose. This vital process occurs in chloroplasts, specialized organelles containing the pigment chlorophyll. Through photosynthesis, plants play a crucial role in the Earth's ecosystem by producing oxygen and providing a source of food for various organisms."
     }
     ]
 
@@ -351,7 +362,7 @@ const makeBulkRequestToEls = (data) => new Promise((resolve, reject) => {
 });
 
 const main = () => new Promise((resolve, reject) => {
-    BluebirdPromise.mapSeries(persons, (data) => new Promise((resolve, reject) => {
+    BluebirdPromise.mapSeries(jobVacancies, (data) => new Promise((resolve, reject) => {
         let vectorText = data.content;
         if (data.collection === 'vacancy') {
             vectorText = data.title + data.location + data.requiredSkills;
@@ -361,10 +372,12 @@ const main = () => new Promise((resolve, reject) => {
         }
         getEmbeddings(vectorText)
             .then((embedRes) => {
+                console.log('RES', embedRes);
                 console.log(`Recevied embeedings for ${data.title}`);
                 console.log(`embeedings length ${embedRes?.data[0]?.embedding.length}`);
                 if (embedRes) {
                     if (data.collection) {
+                        console.log('Embeds', embedRes?.data[0]?.embedding);
                         data[`${data.collection}-vector`] = embedRes?.data[0]?.embedding;
                     } else data['title-vector'] = embedRes?.data[0]?.embedding;
                 }
@@ -373,7 +386,7 @@ const main = () => new Promise((resolve, reject) => {
     }))
       .then(() => {
         console.log('completed');
-          return resolve(makeBulkRequestToEls(persons));
+          return resolve(makeBulkRequestToEls(jobVacancies));
       })
       .catch(err => console.error(err));
 })

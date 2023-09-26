@@ -13,6 +13,7 @@ const vector_demo = [0.008941388, -0.012859385, -0.0080509335, -0.00196514, -0.0
 
 const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new Promise((resolve, reject) => {
     if (!queryVector) return reject(new Error('Please provide query vector to search'));
+    console.log('index details', indexName, vectorField, fields);
     // querying elastic search to get top matched records
     client.search({
         index: indexName ? indexName : 'test_embeedings',
@@ -24,6 +25,7 @@ const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new 
         },
         fields: fields ? fields : ["title", "content"]
     }).then((res) => {
+        console.log(res.hits.hits[0]);
         console.log(`Found ${_.get(res, 'hits.hits.length')} matched record(s)`);
         let data = '';
         if (isReturnHits && !_.isEmpty(_.get(res, 'hits.hits'))) {
@@ -31,7 +33,8 @@ const main = (queryVector, fields, vectorField, indexName, isReturnHits) => new 
         }
         if (!_.isEmpty(_.get(res, 'hits.hits'))) {
            _.each(res.hits.hits, (hit) => {
-            data += `${_.get(hit, '_source.content')}`
+            console.log('HITS', hit);
+            data += `${_.get(hit, '_source.answer')}`;
            });
         }
         return resolve(data);

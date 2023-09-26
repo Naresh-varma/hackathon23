@@ -24,6 +24,11 @@ const getAnswer = [{
   content: ''
 }];
 
+const getFaqs = [{
+  question: 'programming',
+  answer: "answer"
+}];
+
 async function main(queryType, query, feed) {
   const message = queryType === 'keywords' ? getKeywords : getAnswer;
   if (queryType === 'getAnswer' && feed) message[0].content = message[0].content + feed + '\"\n\n';
@@ -35,7 +40,7 @@ async function main(queryType, query, feed) {
     max_tokens: 256,
     top_p: 1,
   });
-  console.log(completion.choices[0].message);
+  console.log('Test', completion.choices[0].message);
   return completion.choices[0].message.content;
 }
 

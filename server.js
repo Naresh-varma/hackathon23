@@ -9,10 +9,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/process-search', async (req, res) => {
-    console.log(req.query);
+    console.log('Query', req.query);
     const query = req.query.searchText;
-    const answer = await llm.processUserQuery(query);
-    // res.setHeader('Content-Type', 'application/json');
+    const index = req.query.index;
+    const answer = await llm.processUserQuery(query, index);
+    console.log('ANS', answer);
     return res.json({ query, answer });
 })
 
