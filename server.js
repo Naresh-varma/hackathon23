@@ -13,6 +13,7 @@ app.get('/process-search', async (req, res) => {
     const query = req.query.searchText;
     const index = req.query.index;
     const answer = await llm.processUserQuery(query, index);
+    // res.setHeader('Content-Type', 'application/json');
     console.log('ANS', answer);
     return res.json({ query, answer });
 })
@@ -27,6 +28,12 @@ app.post('/get-person-recommendations', async (req, res) => {
     const vacancies = req.body;
     // call to getRecommendationforVacancies;
 });
+app.post('/vacancy-recommendations', async (req, res) => {
+    const vacancy = req.body;
+    console.log('vacancy :', vacancy);
+    const data = await llm.getApplicantRecommendationsForGivenVacancy(vacancy);
+    return res.json(data);
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)

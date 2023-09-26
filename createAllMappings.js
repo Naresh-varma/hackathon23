@@ -42,6 +42,17 @@ const allMappings = [
       },
     },
   },
+  {
+    index: "personess",
+    properties: {
+      "personess-vector": {
+        type: "dense_vector",
+        dims: 1536,
+        index: true,
+        similarity: "cosine",
+      },
+    },
+  }
 ];
 
 const hasIndex = (index) => new Promise((resolve, reject) => {

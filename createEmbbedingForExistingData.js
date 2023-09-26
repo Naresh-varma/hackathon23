@@ -29,10 +29,14 @@ const mapper = {
     },
     '642132dd3d73be2200773da5-Vacancy': {
         index: 'vacancies',
-        fields: ['jobtitle', 'yearsOfExpirence', 'jobDescription', 'requiredSkills'],
+        fields: ['jobtitle', 'location', 'yearsOfExpirence', 'jobDescription', 'skilltext'],
         vectorField: 'vacancy-vector'
+    },
+    '642132dd3d73be2200773da5-Personess': {
+        index: 'personess',
+        fields: ['firstName', 'lastName', 'jobLocation', 'skillText'],
+        vectorField: 'personess-vector'
     }
-
 }
 
 const processData = (data, modelName) => new Promise((resolve, reject) => {
@@ -73,24 +77,26 @@ const makeBulkRequestToEls = (data, indexName) => new Promise((resolve, reject) 
 const collections = [
     '642132dd3d73be2200773da5-KnowledgeArticle', 
     '642132dd3d73be2200773da5-Faq',
-    '642132dd3d73be2200773da5-Vacancy'
+    '642132dd3d73be2200773da5-Vacancy',
+    '642132dd3d73be2200773da5-Personess'
 ];
 
 const seedData = (db) => new Promise((resolve, reject) => {
-    BluebirdPromise.mapSeries(collections, (modelName) => new Promise((resolve, reject) => {
+    BluebirdPromise.mapSeries(collections, (modelName) => new Promise((colRes, colRej) => {
+        if (!mapper[modelName]) return colRes();
         const collection = db.collection(modelName);
         collection.find({}).toArray((err, data) => {
             if (err) {
                 console.error('Error while generating data :', err);
-                return resolve();
+                return colRes();
             }
             if (_.isEmpty(data)) {
                 console.log('no data found for model :', modelName);
-                return resolve();
+                return colRes();
             }
             processData(data, modelName)
                 .then(() => makeBulkRequestToEls(data, mapper[modelName].index) )
-                .catch(err => reject(err))
+                .catch(err => colRej(err))
         });
     }))
         .then(() => {
