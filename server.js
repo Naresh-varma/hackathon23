@@ -5,10 +5,12 @@ const app = express()
 const port = 3111
 
 app.get('/process-search', async (req, res) => {
-    console.log(req.query);
+    console.log('Query', req.query);
     const query = req.query.searchText;
-    const answer = await llm(query);
+    const index = req.query.index;
+    const answer = await llm(query, index);
     // res.setHeader('Content-Type', 'application/json');
+    console.log('ANS', answer);
     return res.json({ query, answer });
 })
 

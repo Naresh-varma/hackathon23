@@ -27,7 +27,7 @@ function getVecterText(vacancies) {
     return text;
 }
 
-async function processUserQuery(userQuery) {
+async function processUserQuery(userQuery, index) {
     /*
         1) get keywords
         2) get embeedings for keywords
@@ -36,10 +36,31 @@ async function processUserQuery(userQuery) {
         5) ask openAI for the answer
     */
    try {
-       const keywords = await getLLmResponse('keywords', userQuery);
-       const embedRes = await getEmbeddings(keywords);
-       const feed = await getMatchedData(embedRes);
-       console.log(feed);
+        const keywords = await getLLmResponse('keywords', userQuery);
+        const embedRes = await getEmbeddings(keywords);
+        let fields = [];
+        let vectorField;
+        console.log('Index', index);
+        switch(index) {
+            case 'knowledge_base': 
+            fields = ['title', 'description'];
+            vectorField = 'title-vector';
+            sourceField = 'description';
+            break;
+            case 'vacancy': 
+            fields = ['title', 'requiredSkills', 'jobDescription'];
+            vectorField = 'vacancy-vector';
+            sourceField = '';
+            break;
+            case 'faqs': 
+            fields = ['question', 'answer'];
+            vectorField = 'faqs-vector';
+            sourceField = 'answer';
+            break;
+            default: break;
+        }
+       const feed = await getMatchedData(embedRes, fields, vectorField, index, false, sourceField);
+       console.log('Feed', feed);
        const llm_answer = await getLLmResponse('getAnswer', userQuery, feed);
        console.log(llm_answer);
        return llm_answer;
@@ -92,4 +113,4 @@ module.exports = {
 
 // processUserQuery('what is energy');
 
-getApplicantRecommendationsForGivenVacancy();
+// getApplicantRecommendationsForGivenVacancy();
