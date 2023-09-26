@@ -14,6 +14,125 @@ const openai = new OpenAI({
 
 const persons = [
     {
+        "collection": "person",
+        "name": "Emma Brown",
+        "email": "emma.brown@example.com",
+        "location": "San Francisco",
+        "education": "B.A. Communications",
+        "workExperience": "4 years",
+        "skills": ["Content Writing", "Editing", "Creativity"],
+        "certifications": ["Certified Content Marketer"]
+    },
+    {
+        "collection": "person",
+        "name": "Michael Clark",
+        "email": "michael.clark@example.com",
+        "location": "London",
+        "education": "MBA",
+        "workExperience": "6 years",
+        "skills": ["Financial Analysis", "Budgeting", "Leadership"],
+        "certifications": ["CFA"]
+    }
+];
+
+/*
+[
+    {
+        "collection": "person",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "location": "New York",
+        "education": "M.S. Computer Science",
+        "workExperience": "6 years",
+        "skills": ["Java", "Spring", "Hibernate", "SQL"],
+        "certifications": ["Oracle Certified Professional"]
+    },
+    {
+        "collection": "person",
+        "name": "Alice Smith",
+        "email": "alice.smith@example.com",
+        "location": "San Francisco",
+        "education": "B.S. Information Systems",
+        "workExperience": "5 years",
+        "skills": ["JavaScript", "React", "Node.js", "MongoDB"],
+        "certifications": ["AWS Certified Developer"]
+    },
+    {
+        "collection": "person",
+        "name": "Michael Johnson",
+        "email": "michael.johnson@example.com",
+        "location": "London",
+        "education": "B.E. Computer Engineering",
+        "workExperience": "7 years",
+        "skills": ["Python", "Django", "SQL", "AWS"],
+        "certifications": ["Certified Scrum Master"]
+    },
+    {
+        "collection": "person",
+        "name": "Sarah Lee",
+        "email": "sarah.lee@example.com",
+        "location": "Toronto",
+        "education": "B.Sc. Computer Science",
+        "workExperience": "3 years",
+        "skills": ["C#", ".NET", "ASP.NET", "SQL Server"],
+        "certifications": ["Microsoft Certified Professional"]
+    },
+    {
+        "collection": "person",
+        "name": "Amit Patel",
+        "email": "amit.patel@example.com",
+        "location": "Mumbai",
+        "education": "B.E. Information Technology",
+        "workExperience": "6 years",
+        "skills": ["Angular", "JavaScript", "Node.js", "MongoDB"],
+        "certifications": ["Google Cloud Associate"]
+    },
+    {
+        "collection": "person",
+        "name": "Laura Davis",
+        "email": "laura.davis@example.com",
+        "location": "Los Angeles",
+        "education": "M.S. Software Engineering",
+        "workExperience": "8 years",
+        "skills": ["Java", "Spring Boot", "MySQL", "React"],
+        "certifications": ["ISTQB Certified Tester"]
+    },
+    {
+        "collection": "person",
+        "name": "Raj Sharma",
+        "email": "raj.sharma@example.com",
+        "location": "Delhi",
+        "education": "B.Tech Computer Science",
+        "workExperience": "5 years",
+        "skills": ["PHP", "Laravel", "MySQL", "JavaScript"],
+        "certifications": ["AWS Certified Solutions Architect"]
+    },
+    {
+        "collection": "person",
+        "name": "Sophia Anderson",
+        "email": "sophia.anderson@example.com",
+        "location": "Sydney",
+        "education": "B.E. Computer Engineering",
+        "workExperience": "4 years",
+        "skills": ["Python", "Flask", "SQLAlchemy", "React"],
+        "certifications": ["Certified Ethical Hacker"]
+    },
+    {
+        "collection": "person",
+        "name": "Alex Wang",
+        "email": "alex.wang@example.com",
+        "location": "Beijing",
+        "education": "M.S. Computer Science",
+        "workExperience": "6 years",
+        "skills": ["C++", "Qt", "OpenGL", "CUDA"],
+        "certifications": ["Microsoft Certified Azure Developer"]
+    }
+]
+*/
+
+
+const persons1 = [
+    {
         collection: 'person',
         name: 'Naresh',
         email: 'naresh@gmail.com',
@@ -37,6 +156,124 @@ const persons = [
 ]
 
 const jobVacancies = [
+    {
+        "collection": "vacancy",
+        "title": "Content Writer",
+        "location": "San Francisco",
+        "employmentType": "full-time",
+        "jobDescription": "We're seeking a talented Content Writer to join our team. You'll be responsible for creating engaging and relevant content across various platforms. Strong writing and editing skills, creativity, and ability to adapt to different tones and styles are essential. [San Francisco, Full-time]",
+        "requiredSkills": ["Content Writing", "Editing", "Creativity"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Finance Manager",
+        "location": "London",
+        "employmentType": "full-time",
+        "jobDescription": "We're looking for an experienced Finance Manager to lead our financial operations. You will be responsible for budgeting, financial analysis, and ensuring compliance with financial regulations. Strong financial acumen and leadership skills are essential. [London, Full-time]",
+        "requiredSkills": ["Financial Analysis", "Budgeting", "Financial Regulations", "Leadership"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Environmental Scientist",
+        "location": "Washington D.C.",
+        "employmentType": "full-time",
+        "jobDescription": "Join our team as an Environmental Scientist and contribute to projects related to environmental impact assessments and sustainability initiatives. Strong analytical skills and knowledge of environmental regulations are crucial. [Washington D.C., Full-time]",
+        "requiredSkills": ["Environmental Impact Assessment", "Sustainability", "Analytical Skills", "Environmental Regulations"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Music Producer",
+        "location": "Los Angeles",
+        "employmentType": "full-time",
+        "jobDescription": "We're hiring a Music Producer to oversee the production and recording process. Experience with music composition, audio engineering, and sound design is necessary. [Los Angeles, Full-time]",
+        "requiredSkills": ["Music Composition", "Audio Engineering", "Sound Design"]
+    }
+];
+/*
+[
+    {
+        "collection": "vacancy",
+        "title": "Full Stack Developer",
+        "location": "New York",
+        "employmentType": "full-time",
+        "jobDescription": "We are seeking a highly skilled Full Stack Developer to join our team. You will be responsible for developing and maintaining web applications, from the frontend to the backend. Experience with React, Node.js, and MongoDB is essential. [New York, Full-time]",
+        "requiredSkills": ["React", "Node.js", "MongoDB"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Machine Learning Engineer",
+        "location": "San Francisco",
+        "employmentType": "full-time",
+        "jobDescription": "We are looking for a Machine Learning Engineer to work on cutting-edge AI projects. You will design, implement, and deploy machine learning models. Strong proficiency in Python and experience with TensorFlow or PyTorch is required. [San Francisco, Full-time]",
+        "requiredSkills": ["Python", "TensorFlow", "Machine Learning"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Frontend Developer",
+        "location": "London",
+        "employmentType": "full-time",
+        "jobDescription": "Join our team as a Frontend Developer and help create engaging user experiences. Proficiency in HTML5, CSS3, and JavaScript frameworks such as React or Angular is necessary. Experience in responsive design and cross-browser compatibility is a plus. [London, Full-time]",
+        "requiredSkills": ["HTML5", "CSS3", "React", "Angular"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Data Analyst",
+        "location": "Bangalore",
+        "employmentType": "full-time",
+        "jobDescription": "We are seeking a Data Analyst to interpret data and turn it into actionable insights. Proficiency in SQL, data visualization tools, and experience in data analysis are essential. [Bangalore, Full-time]",
+        "requiredSkills": ["SQL", "Data Analysis", "Data Visualization"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "DevOps Engineer",
+        "location": "Berlin",
+        "employmentType": "full-time",
+        "jobDescription": "Join us as a DevOps Engineer and help optimize our development and deployment processes. Experience with cloud platforms (e.g., AWS, Azure), CI/CD, and automation tools is required. [Berlin, Full-time]",
+        "requiredSkills": ["DevOps", "AWS", "Azure", "CI/CD"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "UI/UX Designer",
+        "location": "Los Angeles",
+        "employmentType": "full-time",
+        "jobDescription": "We are looking for a creative UI/UX Designer to enhance user satisfaction by improving the usability and accessibility of our web and mobile applications. Proficiency in design tools and experience in creating wireframes and prototypes is necessary. [Los Angeles, Full-time]",
+        "requiredSkills": ["UI/UX Design", "Wireframing", "Prototyping"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Cybersecurity Analyst",
+        "location": "Singapore",
+        "employmentType": "full-time",
+        "jobDescription": "We are hiring a Cybersecurity Analyst to protect our systems and networks from cyber threats. Knowledge of network security, encryption, and incident response is crucial. Relevant certifications such as CISSP or CISM are a plus. [Singapore, Full-time]",
+        "requiredSkills": ["Cybersecurity", "Network Security", "Incident Response", "CISSP"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Product Manager",
+        "location": "Seattle",
+        "employmentType": "full-time",
+        "jobDescription": "We are seeking a skilled Product Manager to guide the development and success of our products. Strong communication skills, market research abilities, and experience in product lifecycle management are important. [Seattle, Full-time]",
+        "requiredSkills": ["Product Management", "Market Research", "Product Lifecycle"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "AI Research Scientist",
+        "location": "Tokyo",
+        "employmentType": "full-time",
+        "jobDescription": "Join our team as an AI Research Scientist and work on cutting-edge research projects. Strong background in machine learning, deep learning, and programming skills in Python is required. [Tokyo, Full-time]",
+        "requiredSkills": ["Machine Learning", "Deep Learning", "Python"]
+    },
+    {
+        "collection": "vacancy",
+        "title": "Database Administrator",
+        "location": "Toronto",
+        "employmentType": "full-time",
+        "jobDescription": "We are looking for a skilled Database Administrator to design, implement, and maintain our databases. Proficiency in SQL, database tuning, and experience with databases like PostgreSQL or MySQL is essential. [Toronto, Full-time]",
+        "requiredSkills": ["Database Administration", "SQL", "PostgreSQL", "MySQL"]
+    }
+]
+*/
+const jobVacancies1 = [
     {   
         collection: 'vacancy',
         title: 'Backend Engineer',
@@ -114,7 +351,7 @@ const makeBulkRequestToEls = (data) => new Promise((resolve, reject) => {
 });
 
 const main = () => new Promise((resolve, reject) => {
-    BluebirdPromise.mapSeries(jobVacancies, (data) => new Promise((resolve, reject) => {
+    BluebirdPromise.mapSeries(persons, (data) => new Promise((resolve, reject) => {
         let vectorText = data.content;
         if (data.collection === 'vacancy') {
             vectorText = data.title + data.location + data.requiredSkills;
@@ -136,7 +373,7 @@ const main = () => new Promise((resolve, reject) => {
     }))
       .then(() => {
         console.log('completed');
-          return resolve(makeBulkRequestToEls(jobVacancies));
+          return resolve(makeBulkRequestToEls(persons));
       })
       .catch(err => console.error(err));
 })
