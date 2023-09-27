@@ -73,22 +73,16 @@ async function processUserQuery(userQuery, index) {
 async function getRecommendationforPerson(person) {
     if (!person) {
         person = {
-            "collection": "person",
-            "name": "Michael Clark",
-            "email": "michael.clark@example.com",
-            "location": "London",
-            "education": "MBA",
-            "workExperience": "6 years",
-            "skills": ["Financial Analysis", "Budgeting", "Leadership"],
-            "certifications": ["CFA"]
+            "jobLocation": "London",
+            "yearsOfExpirence": "6 years",
+            "skillText": "Financial Analysis, Budgeting, Leadership",
         };
     }
-    // const vectorText = person.name + person.certifications.join(', ') + person.location + person.education + person.workExperience + person.skills.join(', ');
-    const vectorText = person.skills.join(', ');
+    const vectorText = _.get(person, 'skillText', '') + _.get(person, 'jobLocation', '') + _.get(person, 'yearsOfExpirence', '');
     const embeedings = await getEmbeddings(vectorText);
-    let recommendations = await getMatchedData(embeedings, [], 'vacancy-vector', 'vacancy', true);
-    const vacationFields = ['title', 'requiredSkills', 'jobDescription', 'location', 'employementType'];
-    recommendations = recommendations.map(r => _.pick(r._source, vacationFields));
+    let recommendations = await getMatchedData(embeedings, [], 'vacancy-vector', 'vacancies', true);
+    const vacancyFields = ['jobTitle', 'yearsOfExpirence', 'jobDescription', 'location', "id", 'imageId', 'skillText', 'employmentTypeId'];
+    recommendations = recommendations.map(r => ({score: Math.round(r._score * 100), ..._.pick(r._source, vacancyFields)}));
     return recommendations;
 }
 

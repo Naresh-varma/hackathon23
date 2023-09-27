@@ -52,15 +52,14 @@ const allMappings = [
         similarity: "cosine",
       },
     },
-  }
+  },
 ];
 
 const hasIndex = (index) => new Promise((resolve, reject) => {
     client.indices.exists({ index })
         .then((res) => {
-            console.log(`is ${index} exists :`, res.body);
-            if (res.body) return resolve(true);
-            else return resolve(false);
+            console.log(`is ${index} exists :`, res);
+            return resolve(res);
         })
         .catch(err => reject(err));
 });
@@ -71,14 +70,25 @@ const createIndex = (index) => new Promise((resolve, reject) => {
         .catch(err => reject(err));
 });
 
+const deleteIndex = (index) => new Promise((resolve, reject) => {
+    client.indices.delete({index})
+        .then(res => resolve())
+        .catch(err => reject(err));
+});
+
 const createMappings = (data) => new Promise((resolve, reject) => {
     client.indices.putMapping({ index: data.index, properties: data.properties })
         .then((res) => resolve())
         .catch(err => reject(err));
 });
 
-const checkAndCreateIndexMappings = (data) => new Promise((resolve, reject) => {
+
+const checkAndCreateIndexMappings = (data, deleteAndRecreate = false) => new Promise((resolve, reject) => {
     hasIndex(data.index)
+        .then(exists => {
+            if(!exists) return false;
+            return deleteIndex(data.index);
+        })
         .then((exists) => {
             if (!exists) return createIndex(data.index);
         })
@@ -87,7 +97,7 @@ const checkAndCreateIndexMappings = (data) => new Promise((resolve, reject) => {
         .catch(err => reject(err));
 })
 
-const putIndexMappings = () => new Promise((resolve, reject) => {
+const putIndexMappings = (deleteAndRecreate = false) => new Promise((resolve, reject) => {
     BluebirdPromise.mapSeries(allMappings, (rec) => new Promise((resolve, reject) => {
         console.log('creating mapping for :', rec.index);
         return resolve(checkAndCreateIndexMappings(rec));
@@ -96,12 +106,10 @@ const putIndexMappings = () => new Promise((resolve, reject) => {
         .catch(err => reject(err));
 });
 
-putIndexMappings()
+putIndexMappings() // pass `true` if u want to delete and recreate indices.
     .then(() => {
         console.log('mappings created....');
     })
     .catch(err => {
         console.error('Something went wrong!!! ', err);
-    })
-
-// console.log(client.bulk);
+    });
