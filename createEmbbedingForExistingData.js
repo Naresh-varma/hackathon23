@@ -29,7 +29,7 @@ const mapper = {
     },
     '642132dd3d73be2200773da5-Vacancy': {
         index: 'vacancies',
-        fields: ['jobtitle', 'yearsOfExpirence', 'jobDescription', 'requiredSkills'],
+        fields: ['jobTitle', 'yearsOfExpirence', 'jobDescription', 'skillText'],
         vectorField: 'vacancy-vector'
     }
 
