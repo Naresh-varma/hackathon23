@@ -21,9 +21,8 @@ function getVecterText(vacancies) {
     if (!_.isArray(vacancies)) vacancies = [vacancies];
     let text = '';
     _.forEach(vacancies, (vacancy) => {
-        text += vacancy.title + vacancy.location + vacancy.requiredSkills.join(', ')
+        text += vacancy.jobTitle + vacancy.location + vacancy.skilltext
     });
-    console.log(text);
     return text;
 }
 
@@ -34,7 +33,7 @@ const indexMapper = (index) => {
             vectorField: 'knowledge-vector'
         },
         'vacancy': {
-            fields: ['jobtitle', 'location', 'employmentType', 'yearsOfExpirence', 'jobDescription', 'requiredSkills'],
+            fields: ['jobtitle', 'location', 'yearsOfExpirence', 'jobDescription', 'skilltext'],
             vectorField: 'vacancy-vector'
         },
         'faqs': {
@@ -101,8 +100,15 @@ async function getApplicantRecommendationsForGivenVacancy(vacancy) {
     const vectorText = getVecterText(vacancy);
     const keywords = await getLLmResponse('keywords', vectorText);
     const embeedings = await getEmbeddings(keywords);
-    const recommendations = await getMatchedData(embeedings, ['name', 'email', 'skillsinternal'], 'person-vector', 'person', true);
-    console.log(recommendations);
+    const personFields = ['firstName', 'lastName', 'workemail', 'skillText'];
+    let recommendations = await getMatchedData(embeedings, personFields, 'personess-vector', 'personess', true, 3);
+    if (recommendations && recommendations.length) {
+        _.each(recommendations, (item) => {
+            delete item._source['personess-vector'];
+            if (item._score) item._score = item._score * 100;
+        });
+    }
+    return recommendations;
 }
 
 async function composeMailForShortListedPerson(vacancy, userName) {
