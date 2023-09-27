@@ -32,7 +32,7 @@ const indexMapper = (index) => {
             fields: ['title', 'abstract', 'body'],
             vectorField: 'knowledge-vector'
         },
-        'vacancy': {
+        'vacancies': {
             fields: ['jobtitle', 'location', 'yearsOfExpirence', 'jobDescription', 'skilltext'],
             vectorField: 'vacancy-vector'
         },
@@ -59,7 +59,7 @@ async function processUserQuery(userQuery, index) {
         let vectorField;
         console.log('Index', index);
        const indexDetails = indexMapper(index);
-       const feed = await getMatchedData(embedRes, indexDetails.fields, indexDetails.vectorField, index, false);
+       const feed = await getMatchedData(embedRes, indexDetails.fields, indexDetails.vectorField, index, false, 2);
        console.log('Feed', feed);
        const llm_answer = await getLLmResponse('getAnswer', userQuery, feed);
        console.log(llm_answer);
@@ -148,4 +148,5 @@ module.exports = {
     getRecommendationforPerson,
     getApplicantRecommendationsForGivenVacancy,
     getEmbeddings,
+    composeMailForShortListedPerson,
 }

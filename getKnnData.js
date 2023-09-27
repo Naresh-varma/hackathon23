@@ -33,8 +33,11 @@ const main = (queryVector, fields, vectorField, indexName, isReturnHits, kValue)
            _.each(res.hits.hits, (hit) => {
             console.log('HITS', hit);
             const source = _.get(hit, '_source');
+            _.each(fields, (field) => {
+                if (source[field]) data += `${source[field]} `;
+           });
             delete source[vectorField];
-            data = JSON.stringify(source);
+            // data = JSON.stringify(source);
            });
         }
         return resolve(data);

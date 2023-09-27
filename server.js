@@ -35,6 +35,13 @@ app.post('/vacancy-recommendations', async (req, res) => {
     return res.json(data);
 })
 
+app.post('/compose-vacancy-mail', async (req, res) => {
+    const vacancy = _.get(req, 'body.vacancy');
+    const userName = _.get(req, 'body.userName');
+    const data = await llm.composeMailForShortListedPerson(vacancy, userName);
+    return res.json(data);
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
